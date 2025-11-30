@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Surat Cinta Ulang Tahun untuk Aca - Spesial</title>
+
+    <!-- Tailwind for quick utilities (optional) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --accent: #d81b60; --pink-strong:#ff4069; }
+
+        /* ---------- Base ---------- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg,#fce4ec 0%,#ffc1e3 100%);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-height:100vh;
+            margin:0;
+            padding:20px;
+            transition: background 0.6s ease;
+            overflow:hidden;
+        }
+
+        /* Dark only used for Bab 6 */
+        .dark-mode {
+            background: radial-gradient(circle at 50% 20%, #0b0710 0%, #030204 70%) !important;
+            transition: background 0.6s ease;
+        }
+
+        .card-container {
+            width:100%;
+            max-width:420px;
+            min-height:520px;
+            background:#fff;
+            border-radius:20px;
+            padding:30px;
+            box-shadow:0 18px 50px rgba(255,99,132,0.18);
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            position:relative;
+            z-index:30;
+            transition: box-shadow .4s ease, transform .2s ease;
+        }
+
+        .text-content { min-height:300px; text-align:center; }
+
+        h2 { color:var(--accent); }
+
+        .next-btn {
+            background-color:#ff6f91;
+            color:#fff;
+            padding:12px 26px;
+            border-radius:9999px;
+            font-weight:700;
+            border:0;
+            cursor:pointer;
+            box-shadow: 0 8px 20px rgba(255,111,145,0.22);
+            transition: transform .12s ease, background .12s ease;
+        }
+        .next-btn:hover { background:var(--pink-strong); transform: translateY(-2px); }
+
+        .photo { width:100%; max-height:220px; object-fit:cover; border-radius:12px; border:3px solid #ffd9e6; margin:12px 0; }
+        .photo-large { max-height:320px; }
+
+        /* hearts */
+        .heart-container { position:fixed; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
+        .heart { position:absolute; font-size:18px; animation: floatUp 4s linear infinite; opacity:0; }
+        @keyframes floatUp {
+            0%{ transform: translateY(0) scale(.6); opacity:0 }
+            10%{ opacity:1 }
+            80%{ opacity:1 }
+            100%{ transform: translateY(-520px) scale(1.12); opacity:0 }
+        }
+
+        /* typing caret */
+        .animated-text::after { content:'|'; animation: blink .8s step-end infinite; }
+        @keyframes blink { 0%,100%{visibility:hidden} 50%{visibility:visible} }
+
+        /* joke bold + shake */
+        #jokeText { display:none; color:#6b7280; font-style:italic; margin-top:12px; }
+        #jokeText strong { font-weight:700; }
+        .shake { animation: shakeAnim .7s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shakeAnim {
+            10%,90%{ transform: translateX(-1px); }
+            20%,80%{ transform: translateX(2px); }
+            30%,50%,70%{ transform: translateX(-4px); }
+            40%,60%{ transform: translateX(4px); }
+        }
+
+        /* confetti emoji fall */
+        @keyframes confettiFall { to { transform: translateY(110vh) rotate(360deg); opacity:0 } }
+
+        /* Candle (tangkai + flame) */
+        .candle-container { display:flex; justify-content:center; margin-top:18px; gap:14px; align-items:flex-end; }
+        .candle {
+            width:60px; height:120px; border-radius:14px;
+            background: linear-gradient(180deg,#ffd7ea,#ffb6d6);
+            position:relative; box-shadow: 0 14px 36px rgba(255,90,130,0.14), inset 0 -6px 12px rgba(0,0,0,0.03);
+            cursor:pointer;
+        }
+        .candle::after {
+            content:''; position:absolute; left:50%; transform:translateX(-50%);
+            bottom:100%; width:32px; height:50px; border-radius:45% 45% 30% 30%;
+            background: radial-gradient(circle at 35% 30%, #fff1b8 0%, #ffd86b 30%, #ff7a6b 65%, rgba(255,120,120,0) 100%);
+            box-shadow: 0 10px 26px rgba(255,150,150,0.18), 0 0 20px rgba(255,190,120,0.08);
+            animation: flameWiggle 900ms ease-in-out infinite;
+            transform-origin:50% 80%;
+        }
+        .candle.off::after {
+            opacity:0; transform: scale(.6) translateY(8px); animation:none; box-shadow:none; transition: opacity .28s, transform .28s;
+        }
+        @keyframes flameWiggle {
+            0% { transform: translateX(-50%) rotate(-3deg) scale(1); }
+            50% { transform: translateX(-50%) rotate(3deg) scale(1.03); }
+            100% { transform: translateX(-50%) rotate(-3deg) scale(1); }
+        }
+
+        /* small mobile adjustments */
+        @media (max-width:420px) {
+            .card-container { padding:22px; min-height:480px; }
+            .candle { width:48px; height:92px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- background music (replace ultah_aca.mp3 with your file) -->
+    <audio id="backgroundMusic" loop>
+        <source src="ultah_aca.mp3" type="audio/mp3">
+        <source src="ultah_aca.ogg" type="audio/ogg">
+    </audio>
+
+    <div id="heartContainer" class="heart-container"></div>
+
+    <div id="birthdayCard" class="card-container">
+        <div id="content" class="text-content"></div>
+
+        <div class="flex flex-col items-center mt-6">
+            <button id="nextButton" class="next-btn">Loading...</button>
+
+            <p id="jokeText" class="text-xs mt-3 italic">
+                <strong>gimana rasanya nambah umur tapi gak nambah tinggi badan 😂</strong>
+            </p>
+        </div>
+    </div>
+
+<script>
+/* ================== State & Elements ================== */
+const heartContainer = document.getElementById('heartContainer');
+const card = document.getElementById('birthdayCard');
+const content = document.getElementById('content');
+const btn = document.getElementById('nextButton');
+const joke = document.getElementById('jokeText');
+const audio = document.getElementById('backgroundMusic');
+
+let currentStep = 0;
+let runaway = {enabled:false, attempts:0, handler:null};
+
+/* ------------------ Pages (original texts you sent) ------------------ */
+const pages = [
+    // Halaman 0
+    {
+        title: "Spesial Hari Ini, Untukmu.",
+        text: "Ada yang spesial menantimu. Ini adalah sebuah cerita singkat, hanya untukmu. Tekan tombol di bawah untuk memulai. **Baca sampai akhir ya!** 😉",
+        image: null
+    },
+    // Halaman 1
+    {
+        title: "Bab 1: Awal Kisah Kita",
+        text: "Hai Aca. Cuma mau bilang, kenalan sama kamu 1 bulan lebih ini rasanya udah kayak kenal lama banget. Kamu bener-bener jadi **plot twist** terbaik yang pernah ada. Bersyukur banget bisa ketemu kamu. 😉",
+        image: null
+    },
+    // Halaman 2
+    {
+        title: "Bab 2: Misi 'Push Penjaga'",
+        text: "Ingat gak kata-kata pertama aku pas *chat* kamu? 'Mau ku gombalin tiap hari gak?' Dan kamu jawab: **'minimal push penjaga dulu bg'** 🤣. Sejak saat itu, aku tahu kamu ini beda, target yang harus aku 'push' terus! 😂",
+        image: "foto_aca_1.jpg"
+    },
+    // Halaman 3
+    {
+        title: "Bab 3: Pesona Aca",
+        text: "Jujur, pas pertama lihat, kamu cakep banget. Awalnya *pure* tertarik sama penampilanmu. Gak nyangka, ternyata isi kepala dan tingkah lakumu jauh lebih menarik. Aku jatuh cinta sama dua-duanya. ❤️",
+        image: "foto_aca_2.jpg"
+    },
+    // Halaman 4 (start music on next click)
+    {
+        title: "Bab 4: Bukan Cuma 'Casing'",
+        text: "Kesan awal: Aca itu cewek jutek, kalem, dan irit bicara. Ternyata, itu cuma *filter* awal! Sekarang malah paling cerewet dan nggak bisa diam. Tapi aku suka, karena itu artinya kamu nyaman jadi dirimu sendiri di dekatku. 🥰",
+        image: null,
+        action: 'start_music'
+    },
+    // Halaman 5 (confetti)
+    {
+        title: "Bab 5: Happy Birthday, Sayang!",
+        text: "**Selamat Ulang Tahun, Aca!** Doa terbaikku, semoga semua yang kamu impikan tercapai. Rezeki lancar, makin sukses, dan yang paling penting, kita bisa terus *bareng-bareng* bikin momen lucu dan konyol. *Love you more!* 🥳",
+        image: "foto_aca_3.jpg",
+        action: 'confetti'
+    },
+    // Halaman 6 (dark + candle)
+    {
+        title: "Bab 6: Saatnya Berdoa",
+        text: "Pasangan terbaikku, sekarang tutup mata dan buat permintaan (*Make a wish*) dulu yaaa. Setelah itu, tekan tombol di bawah ini! 👇",
+        image: null
+    }
+];
+
+/* ------------------ Utility: Hearts ------------------ */
+const heartEmojis = ['💖','❤️','🌟','✨'];
+function spawnHeart(){
+    const el = document.createElement('div');
+    el.className = 'heart';
+    el.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+    el.style.left = (Math.random()*100) + 'vw';
+    el.style.bottom = '-10px';
+    el.style.fontSize = (12 + Math.random()*18) + 'px';
+    el.style.opacity = 1;
+    el.style.animationDelay = (Math.random()*2) + 's';
+    heartContainer.appendChild(el);
+    setTimeout(()=> el.remove(), 4200);
+}
+setInterval(spawnHeart, 700);
+
+/* ------------------ Typewriter ------------------ */
+function typeWriter(el, text, cb){
+    el.textContent = '';
+    el.classList.add('animated-text');
+    let i = 0;
+    const t = setInterval(()=> {
+        el.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) { clearInterval(t); el.classList.remove('animated-text'); if(cb) cb(); }
+    }, 28);
+}
+
+/* ------------------ Music fade-in ------------------ */
+function fadeInMusic(duration=1500){
+    try {
+        audio.volume = 0;
+        audio.play().catch(()=>{/* autoplay blocked */});
+        const step = 50;
+        const inc = step / duration;
+        let vol = 0;
+        const id = setInterval(()=> {
+            vol += inc;
+            if (vol >= 1) { audio.volume = 1; clearInterval(id); }
+            else audio.volume = Math.min(1, vol);
+        }, step);
+    } catch(e){ console.log('audio err', e); }
+}
+
+/* ------------------ Confetti (emoji) ------------------ */
+function launchConfetti(count=28){
+    for (let i=0;i<count;i++){
+        setTimeout(()=> {
+            const c = document.createElement('div');
+            c.textContent = ['🎉','✨','🎊'][Math.floor(Math.random()*3)];
+            c.style.position = 'fixed';
+            c.style.left = (Math.random()*100) + 'vw';
+            c.style.top = '-10vh';
+            c.style.fontSize = (14 + Math.random()*24) + 'px';
+            c.style.zIndex = 60;
+            c.style.pointerEvents = 'none';
+            document.body.appendChild(c);
+            // animate via transform
+            requestAnimationFrame(()=> c.style.transform = `translateY(${110 + Math.random()*30}vh) rotate(${Math.random()*720}deg)`);
+            setTimeout(()=> c.remove(), 2200);
+        }, i*55);
+    }
+}
+
+/* ------------------ Render Page ------------------ */
+function renderPage(step){
+    const data = pages[step];
+    // always reset dark mode (we enable only for step 6)
+    document.body.classList.remove('dark-mode');
+
+    // clear content
+    content.innerHTML = '';
+    joke.style.display = 'none';
+    // title
+    const title = document.createElement('h2');
+    title.className = 'text-2xl font-bold mb-3';
+    title.textContent = data.title;
+    content.appendChild(title);
+
+    // image if any
+    if (data.image){
+        const img = document.createElement('img');
+        img.src = data.image;
+        img.alt = data.title;
+        img.className = 'photo mx-auto';
+        img.onerror = ()=> { img.style.display='none'; };
+        content.appendChild(img);
+    }
+
+    // paragraph
+    const p = document.createElement('p');
+    p.className = 'text-lg text-gray-700 font-medium mt-3 min-h-[120px]';
+    content.appendChild(p);
+    typeWriter(p, data.text);
+
+    // button text
+    if (step === 0) btn.textContent = 'Buka Sekarang! 💖';
+    else if (step < pages.length - 1) btn.textContent = 'Next ➡️';
+    else btn.textContent = 'Lanjut ke Pesan Terakhir!';
+
+    // actions: confetti for bab5
+    if (data.action === 'confetti') {
+        setTimeout(()=> launchConfetti(28), 700);
+    }
+
+    // If Bab 6: enable dark-mode + show candle
+    if (step === pages.length - 1){
+        // enable dark mode visually after short delay so typing is readable
+        setTimeout(()=> {
+            document.body.classList.add('dark-mode');
+            // gentle card highlight so text remains readable
+            card.style.boxShadow = '0 20px 60px rgba(255,99,132,0.08)';
+        }, 500);
+
+        // show candle + hint
+        setTimeout(()=> {
+            const wrap = document.createElement('div');
+            wrap.className = 'candle-container';
+            const candle = document.createElement('div');
+            candle.className = 'candle';
+            candle.id = 'wishCandle';
+            wrap.appendChild(candle);
+
+            const hint = document.createElement('div');
+            hint.style.marginTop='10px';
+            hint.style.color='#f3f4f6';
+            hint.style.opacity='0.95';
+            hint.style.fontSize='13px';
+            hint.innerHTML = 'Klik lilinnya setelah kamu make a wish ✨';
+
+            content.appendChild(wrap);
+            content.appendChild(hint);
+
+            // click extinguish
+            candle.addEventListener('click', ()=> {
+                candle.classList.add('off');
+                // after extinguish, remove dark and reveal final
+                setTimeout(()=> {
+                    document.body.classList.remove('dark-mode');
+                    // remove candle highlight from card
+                    card.style.boxShadow = '0 18px 50px rgba(255,99,132,0.18)';
+                    revealFinalMessage();
+                }, 700);
+            }, { once:true });
+        }, 900);
+    }
+}
+
+/* ------------------ Final message (penutup) ------------------ */
+function revealFinalMessage(){
+    content.innerHTML = '';
+    const h = document.createElement('h2');
+    h.className = 'text-2xl font-bold mb-3';
+    h.textContent = "Surat Cinta Penutup 💌";
+    content.appendChild(h);
+
+    const p = document.createElement('p');
+    p.className = 'text-lg text-gray-700 font-medium mt-2';
+    p.innerHTML = "Oke, setelah semua *wish* diucapkan, <strong>last one from me</strong>: Semoga kamu masih betah dengerin semua gombalan dan kegilaan aku sampai tahun-tahun berikutnya! Karena kamu adalah <em>my favorite human</em>. Yuk, kita rayain! 🎉";
+    content.appendChild(p);
+
+    // hide button and show joke bold + shake
+    btn.classList.add('hidden');
+    joke.style.display = 'block';
+    joke.classList.add('shake');
+    // gentle final glow
+    card.style.boxShadow = '0 0 50px 10px rgba(255,64,105,0.10)';
+}
+
+/* ------------------ Next page logic (and music fade) ------------------ */
+function nextPage(){
+    // If currentStep === 4 then next would be 5 (Bab5) — start music fade-in
+    if (currentStep === 4){
+        fadeInMusic(1400);
+    }
+
+    if (currentStep < pages.length - 1){
+        currentStep++;
+        renderPage(currentStep);
+
+        // if we've arrived to Bab6 (index last), enable runaway for button (playful)
+        if (currentStep === pages.length - 1){
+            setTimeout(()=> enableRunaway(), 800);
+        }
+    }
+}
+
+/* ------------------ Runaway (gocek) button behavior ------------------ */
+function enableRunaway(){
+    runaway.enabled = true;
+    runaway.attempts = 0;
+    runaway.handler = function(e){
+        // compute distance between pointer and button center
+        const rect = btn.getBoundingClientRect();
+        const bx = rect.left + rect.width/2;
+        const by = rect.top + rect.height/2;
+        const px = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
+        const py = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY) || 0;
+        const dx = px - bx, dy = py - by;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const threshold = 110;
+        if (dist < threshold && runaway.enabled){
+            runaway.attempts++;
+            const moveX = (dx/Math.max(Math.abs(dx),1)) * 90;
+            const moveY = (dy/Math.max(Math.abs(dy),1)) * 40;
+            btn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            setTimeout(()=> btn.style.transform = '', 420);
+            if (runaway.attempts > 6){
+                runaway.enabled = false;
+                btn.style.boxShadow = '0 8px 20px rgba(0,0,0,0.12)';
+            }
+        }
+    };
+    window.addEventListener('mousemove', runaway.handler);
+    window.addEventListener('touchmove', runaway.handler, { passive:true });
+}
+
+function disableRunaway(){
+    if (runaway.handler){
+        window.removeEventListener('mousemove', runaway.handler);
+        window.removeEventListener('touchmove', runaway.handler);
+        runaway.handler = null;
+    }
+    runaway.enabled = false;
+}
+
+/* ------------------ Button click handling ------------------ */
+btn.addEventListener('click', (e)=>{
+    // If on Bab6 (candle page), button is playful: will try to avoid clicks
+    if (currentStep === pages.length - 1){
+        if (runaway.enabled){
+            runaway.attempts++;
+            btn.style.transform = `translate(${(Math.random()*160-80)}px, ${(Math.random()*80-40)}px)`;
+            setTimeout(()=> btn.style.transform = '', 420);
+            if (runaway.attempts > 6){
+                runaway.enabled = false;
+                revealFinalMessage();
+            }
+            return;
+        } else {
+            revealFinalMessage();
+            return;
+        }
+    }
+
+    // Normal flow
+    nextPage();
+});
+
+/* ------------------ Init ------------------ */
+window.addEventListener('load', ()=> {
+    // initial render
+    renderPage(currentStep);
+    btn.textContent = 'Buka Sekarang! 💖';
+    audio.volume = 0;
+});
+
+/* Clean up */
+window.addEventListener('beforeunload', ()=> disableRunaway());
+</script>
+</body>
+</html>
